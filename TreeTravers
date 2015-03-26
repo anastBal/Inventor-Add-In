@@ -1,0 +1,68 @@
+'Функция подбора обозначений
+'Функция обхода дерева
+ Private Sub TraverseAsm(Occurrences As ComponentOccurrences, Node As TreeNode)
+ Dim oOcc As ComponentOccurrence
+ Dim oOccDef As ComponentDefinition 
+ Dim AsmDef As AssemblyComponentDefinition
+ Dim oOccs As ComponentOccurrencesEnumerator
+ Dim NameComponent As String
+ Dim fmgr As FileManager
+fmgr = InvApp.FileManager
+ oOccs = oAsmDoc.AllReferencedDocuments
+
+ For Each oOcc In oOccs
+    NameComponent = oOcc.OccurrencePath.Text
+        Next
+
+       'Старый вариант
+
+     For Each oOcc In Occurrences
+
+          Try
+              For Each oDoc2 In oAsmDoc.AllReferencedDocuments
+                  NameComponent = oDoc2.FullFileName
+                 MsgBox(NameComponent)
+               Next
+
+             oOccDef = oOcc.Definition
+              NameOboz = oOccDef.Document.PropertySets.Item("Design Tracking Properties").Item("Part Number").value & "   " _
+              & oOccDef.Document.PropertySets.Item("Design Tracking Properties").Item("Description").value
+             node1 = Node.Nodes.Add(NameOboz)
+
+             Try
+                NameComponent = oOccDef.Document.PropertySets.Item("Project").Item("Part Number").value
+                 MsgBox(NameComponent)
+              Catch ex As Exception
+                 MsgBox(ex.Message)
+              End Try
+
+                Select Case oOcc.DefinitionDocumentType
+                   Case DocumentTypeEnum.kAssemblyDocumentObject
+                       node1.ImageIndex = 1
+                       node1.SelectedImageIndex = 1
+                    Case DocumentTypeEnum.kPartDocumentObject
+                      node1.ImageIndex = 2
+                        node1.SelectedImageIndex = 2
+                   Case DocumentTypeEnum.kDrawingDocumentObject
+                      node1.ImageIndex = 3
+    '                    node1.SelectedImageIndex = 3
+    '            End Select
+
+    '            If oOcc.DefinitionDocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then Call TraverseAsm(oOcc.SubOccurrences, node1)
+
+    '        Catch ex As Exception
+    '            MsgBox(NameOboz & vbCrLf & ex.Message)
+    '        End Try
+    '        'levelName = NameOboz & level
+    '    Next
+    '    Return NameOboz & level
+
+    '    Новый вариант
+    '    Try
+    '        For Each oDoc2 In oAsmDoc.AllReferencedDocuments
+    '            NameComponent = oDoc2.FullFileName
+    '            MsgBox(NameComponent)
+    '        Next
+    '    Catch
+    '    End Try
+    'End Sub
